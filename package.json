@@ -26,6 +26,7 @@
     "axios": "^0.21.1",
     "bcrypt": "^5.0.0",
     "compression": "^1.7.3",
+    "dotenv": "^10.0.0",
     "express": "^4.16.4",
     "fs": "0.0.1-security",
     "google-map-react": "^2.1.10",

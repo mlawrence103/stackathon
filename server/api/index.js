@@ -4,11 +4,11 @@ module.exports = router;
 if (process.env.NODE_ENV !== 'production') {
   require('../../secrets');
 }
-const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+const MAPBOX_API_KEY = process.env.MAPBOX_API_KEY;
 
 router.get('/apiKey', (req, res, next) => {
   try {
-    res.json(GOOGLE_API_KEY);
+    res.json(MAPBOX_API_KEY);
   } catch (error) {
     next(error);
   }
