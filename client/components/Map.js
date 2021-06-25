@@ -10,7 +10,8 @@ import Geocode from 'react-geocode';
 import { connect } from 'react-redux';
 import { getKey } from '../store/map';
 
-const GOOGLE_API_KEY = 'AIzaSyDA2x1eKy32zjTnoYOIipTxI2UrKZ_S-tM&v';
+//why doesn't this work?
+const GOOGLE_API_KEY = process.node.env.GOOGLE_API_KEY;
 Geocode.setApiKey(GOOGLE_API_KEY);
 Geocode.setLocationType('ROOFTOP');
 
@@ -32,6 +33,7 @@ class Map extends React.Component {
   }
 
   handleChange(event) {
+    event.preventDefault();
     this.setState({
       [event.target.name]: event.target.value,
     });
