@@ -35,6 +35,12 @@ form div {
 }
 
 #address-form {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+#address-form-info {
   font-family: 'PT Sans';
   font-size: 1.25rem;
   display: flex;
@@ -44,11 +50,4 @@ form div {
 
 #address-form input {
   width: 25rem;
-}
-
-#map {
-  height: 400px;
-  /* The height is 400 pixels */
-  width: 100%;
-  /* The width is the width of the web page */
 }
