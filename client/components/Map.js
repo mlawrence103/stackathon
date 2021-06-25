@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import { getKey } from '../store/map';
 
 //why doesn't this work?
-const GOOGLE_API_KEY = process.node.env.GOOGLE_API_KEY;
+const GOOGLE_API_KEY = 'AIzaSyDA2x1eKy32zjTnoYOIipTxI2UrKZ_S';
 Geocode.setApiKey(GOOGLE_API_KEY);
 Geocode.setLocationType('ROOFTOP');
 
@@ -19,6 +19,7 @@ class Map extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      key: '',
       address1: '',
       address2: '',
       center: {
@@ -49,14 +50,6 @@ class Map extends React.Component {
   }
 
   convertToLatLong(address) {
-    // const geocoder = new google.maps.Geocoder();
-    // geocoder.geocode({ address: address }, function (results, status) {
-    //   if (status === google.maps.GeocoderStatus.OK) {
-    //     const lat = results[0].geometry.location.lat();
-    //     const long = results[0].geometry.location.lng();
-    //     return [lat, long];
-    //   }
-    // });
     Geocode.fromAddress(address).then(
       (response) => {
         const { lat, lng } = response.results[0].geometry.location;
@@ -68,11 +61,11 @@ class Map extends React.Component {
     );
   }
 
-  // componentDidMount() {
-  //   console.log('COMP DID MOUNT');
-  //   this.props.getKey();
-  //   // this.setState({ ...this.state, key: this.props.map });
-  // }
+  componentDidMount() {
+    console.log('COMP DID MOUNT');
+    this.props.getKey();
+    this.setState({ ...this.state, key: this.props.map });
+  }
 
   render() {
     // console.log('foundKey props in render: ', this.props.foundKey);
