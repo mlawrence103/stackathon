@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Map from './Map';
+import MapBox from './MapBox';
 
 /**
  * COMPONENT
@@ -12,7 +13,7 @@ export const Home = (props) => {
     <div>
       <h1 id="website-header">Meet in the Middle</h1>
       <div className="main">
-        <Map />
+        <MapBox />
       </div>
     </div>
   );

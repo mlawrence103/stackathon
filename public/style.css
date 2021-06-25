@@ -29,6 +29,12 @@ form div {
   color: #41504b;
 }
 
+.map-container {
+  height: 500px;
+  width: 75%;
+  margin: 0 12.5% 0 12.5%;
+}
+
 .map {
   margin-left: 12.5%;
   margin-right: 12.5%;

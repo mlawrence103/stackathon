@@ -53,7 +53,7 @@ class Map extends React.Component {
     Geocode.fromAddress(address).then(
       (response) => {
         const { lat, lng } = response.results[0].geometry.location;
-        resturn[(lat, lng)];
+        return [(lat, lng)];
       },
       (error) => {
         console.error(error);
