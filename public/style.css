@@ -1,5 +1,6 @@
 body {
   font-family: sans-serif;
+  background-color: #c9eddc;
 }
 
 a {
@@ -18,4 +19,36 @@ nav a {
 form div {
   margin: 1em;
   display: inline-block;
+}
+
+#website-header {
+  text-align: center;
+  font-family: 'Yanone Kaffeesatz';
+  letter-spacing: 0.25rem;
+  font-size: 3rem;
+  color: #41504b;
+}
+
+.map {
+  margin-left: 12.5%;
+  margin-right: 12.5%;
+}
+
+#address-form {
+  font-family: 'PT Sans';
+  font-size: 1.25rem;
+  display: flex;
+  margin-top: 2rem;
+  justify-content: space-around;
+}
+
+#address-form input {
+  width: 25rem;
+}
+
+#map {
+  height: 400px;
+  /* The height is 400 pixels */
+  width: 100%;
+  /* The width is the width of the web page */
 }
