@@ -122,28 +122,96 @@ class MapBox extends React.PureComponent {
         <div ref={this.mapContainer} className="map-container" />
         <form id="address-form">
           <div id="address-form-info">
-            <div className="address-input">
-              <label htmlFor="address-1">
-                <small>Address 1:</small>
-              </label>
-              <input
-                name="address1"
-                type="text"
-                onChange={handleChange}
-                value={this.state.address1}
-              />
-            </div>
-            <div className="address-input">
-              <label htmlFor="address-2">
-                <small>Address 2:</small>
-              </label>
-              <input
-                name="address2"
-                type="text"
-                onChange={handleChange}
-                value={this.state.address2}
-              />
-            </div>
+            <section id="address-1-section">
+              <div className="address-input">
+                <label htmlFor="address-1">
+                  <small>Address 1:</small>
+                </label>
+                <input
+                  name="address1"
+                  type="text"
+                  onChange={handleChange}
+                  value={this.state.address1}
+                />
+              </div>
+              <div className="travel-form-wrapper">
+                <small>Travel Type: </small>
+                <div className="travel-form">
+                  <div className="travel-type">
+                    <input
+                      type="radio"
+                      className="driving-travel"
+                      name="travelType1"
+                      value="Driving"
+                    />
+                    <label>Driving</label>
+                  </div>
+                  <div className="travel-type">
+                    <input
+                      type="radio"
+                      className="walking-travel"
+                      name="travelType1"
+                      value="Walking"
+                    />
+                    <label>Walking</label>
+                  </div>
+                  <div className="travel-type">
+                    <input
+                      type="radio"
+                      className="cycling-travel"
+                      name="travelType1"
+                      value="Cycling"
+                    />
+                    <label>Cycling</label>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section id="address-2-section">
+              <div className="address-input">
+                <label htmlFor="address-2">
+                  <small>Address 2:</small>
+                </label>
+                <input
+                  name="address2"
+                  type="text"
+                  onChange={handleChange}
+                  value={this.state.address2}
+                />
+              </div>
+              <div className="travel-form-wrapper">
+                <small>Travel Type: </small>
+                <div className="travel-form">
+                  <div className="travel-type">
+                    <input
+                      type="radio"
+                      className="driving-travel"
+                      name="travelType2"
+                      value="Driving"
+                    />
+                    <label>Driving</label>
+                  </div>
+                  <div className="travel-type">
+                    <input
+                      type="radio"
+                      className="walking-travel"
+                      name="travelType2"
+                      value="Walking"
+                    />
+                    <label>Walking</label>
+                  </div>
+                  <div className="travel-type">
+                    <input
+                      type="radio"
+                      className="cycling-travel"
+                      name="travelType2"
+                      value="Cycling"
+                    />
+                    <label>Cycling</label>
+                  </div>
+                </div>
+              </div>
+            </section>
           </div>
           <button id="find-spot-button" type="submit" onClick={handleSubmit}>
             Find a Meeting Spot

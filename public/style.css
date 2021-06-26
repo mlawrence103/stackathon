@@ -54,8 +54,36 @@ form div {
   justify-content: space-around;
 }
 
-#address-form input {
+.address-input input {
   width: 25rem;
+  margin-bottom: 0;
+}
+
+.travel-form-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.travel-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin: 0;
+  width: 50%;
+}
+
+.travel-type {
+  font-size: 12px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin: 0.75rem 1rem 0 0;
+}
+#walking-travel,
+#driving-travel,
+#cycling-travel {
+  margin-top: none;
 }
 
 #middle-coords {
@@ -80,12 +108,9 @@ form div {
   padding: 12px;
   border: 1px solid #4c3b4d;
   border-radius: 3px;
+  margin-top: 1rem;
 }
 #find-spot-button:hover,
 #start-over-button:hover {
   background-color: #82968c;
-}
-
-#start-over-button {
-  margin-top: 1rem;
 }
