@@ -10,6 +10,8 @@ class MapBox extends React.PureComponent {
     this.state = {
       address1: '',
       address2: '',
+      travelType1: 'Walking',
+      travelType2: 'Walking',
       lng: -73.99,
       lat: 40.76,
       zoom: 12,
@@ -143,6 +145,7 @@ class MapBox extends React.PureComponent {
                       className="driving-travel"
                       name="travelType1"
                       value="Driving"
+                      onClick={this.setState({ travelType1: 'Driving' })}
                     />
                     <label>Driving</label>
                   </div>
@@ -152,6 +155,7 @@ class MapBox extends React.PureComponent {
                       className="walking-travel"
                       name="travelType1"
                       value="Walking"
+                      onClick={this.setState({ travelType1: 'Walking' })}
                     />
                     <label>Walking</label>
                   </div>
@@ -161,6 +165,7 @@ class MapBox extends React.PureComponent {
                       className="cycling-travel"
                       name="travelType1"
                       value="Cycling"
+                      onClick={this.setState({ travelType1: 'Cycling' })}
                     />
                     <label>Cycling</label>
                   </div>
@@ -188,6 +193,7 @@ class MapBox extends React.PureComponent {
                       className="driving-travel"
                       name="travelType2"
                       value="Driving"
+                      onClick={this.setState({ travelType1: 'Driving' })}
                     />
                     <label>Driving</label>
                   </div>
@@ -197,6 +203,7 @@ class MapBox extends React.PureComponent {
                       className="walking-travel"
                       name="travelType2"
                       value="Walking"
+                      onClick={this.setState({ travelType1: 'Walking' })}
                     />
                     <label>Walking</label>
                   </div>
@@ -206,6 +213,7 @@ class MapBox extends React.PureComponent {
                       className="cycling-travel"
                       name="travelType2"
                       value="Cycling"
+                      onClick={this.setState({ travelType1: 'Cycling' })}
                     />
                     <label>Cycling</label>
                   </div>
