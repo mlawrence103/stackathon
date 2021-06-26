@@ -2,6 +2,7 @@ import React from 'react';
 import { convertToCoords, getKey } from '../store/map';
 import { connect } from 'react-redux';
 import mapboxgl from '!mapbox-gl';
+import findMiddle from './findMiddle';
 import MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions';
 
 class MapBox extends React.PureComponent {
@@ -22,7 +23,7 @@ class MapBox extends React.PureComponent {
     this.mapContainer = React.createRef();
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.findMiddle = this.findMiddle.bind(this);
+    // this.findMiddle = this.findMiddle.bind(this);
   }
 
   handleChange(event) {
@@ -36,53 +37,59 @@ class MapBox extends React.PureComponent {
     console.log(this.state);
     event.preventDefault();
     await this.props.convertToCoords(this.state.address1, this.state.address2);
-    this.findMiddle(this.props.coordinates);
+    // this.findMiddle(this.props.coordinates);
+    const [midX, midY] = await findMiddle(
+      this.props.coordinates,
+      this.state.map,
+      this.state.address1,
+      this.state.address2
+    );
+    this.setState({ ...this.state, midLng: midX, midLat: midY });
   }
 
-  async findMiddle(coordinates) {
-    console.log('in find middle with coordinates: ', coordinates);
-    console.log('local state map: ', this.state.map);
-    const x1 = coordinates[0][0];
-    const x2 = coordinates[1][0];
-    const y1 = coordinates[0][1];
-    const y2 = coordinates[1][1];
-    const midX = (x1 + x2) / 2;
-    const midY = (y1 + y2) / 2;
-    const westmost = Math.min(x1, x2) - 0.005;
-    const eastmost = Math.max(x1, x2) + 0.005;
-    const southmost = Math.min(y1, y2) - 0.005;
-    const northmost = Math.max(y1, y2) + 0.005;
-    // console.log(`middle (${midX},${midY})`);
-    this.setState({ ...this.state, midLng: midX, midLat: midY });
-    await new mapboxgl.Marker()
-      .setLngLat([midX, midY])
-      .addTo(this.state.map)
-      .setPopup(
-        new mapboxgl.Popup({ offset: 25 }).setHTML(
-          '<h3>' + 'Meeting Point' + '</h3>'
-        )
-      );
-    await new mapboxgl.Marker()
-      .setLngLat([x1, y1])
-      .addTo(this.state.map)
-      .setPopup(
-        new mapboxgl.Popup({ offset: 25 }).setHTML(
-          '<h3>' + 'Address 1' + '</h3><p>' + this.state.address1 + '</p'
-        )
-      );
-    await new mapboxgl.Marker()
-      .setLngLat([x2, y2])
-      .addTo(this.state.map)
-      .setPopup(
-        new mapboxgl.Popup({ offset: 25 }).setHTML(
-          '<h3>' + 'Address2' + '</h3><p>' + this.state.address2 + '</p'
-        )
-      );
-    this.state.map.fitBounds([
-      [westmost, southmost],
-      [eastmost, northmost],
-    ]);
-  }
+  // async findMiddle(coordinates) {
+  //   console.log('in find middle with coordinates: ', coordinates);
+  //   console.log('local state map: ', this.state.map);
+  //   const x1 = coordinates[0][0];
+  //   const x2 = coordinates[1][0];
+  //   const y1 = coordinates[0][1];
+  //   const y2 = coordinates[1][1];
+  //   const midX = (x1 + x2) / 2;
+  //   const midY = (y1 + y2) / 2;
+  //   const westmost = Math.min(x1, x2) - 0.005;
+  //   const eastmost = Math.max(x1, x2) + 0.005;
+  //   const southmost = Math.min(y1, y2) - 0.005;
+  //   const northmost = Math.max(y1, y2) + 0.005;
+  //   this.setState({ ...this.state, midLng: midX, midLat: midY });
+  //   await new mapboxgl.Marker()
+  //     .setLngLat([midX, midY])
+  //     .addTo(this.state.map)
+  //     .setPopup(
+  //       new mapboxgl.Popup({ offset: 25 }).setHTML(
+  //         '<h3>' + 'Meeting Point' + '</h3>'
+  //       )
+  //     );
+  //   await new mapboxgl.Marker()
+  //     .setLngLat([x1, y1])
+  //     .addTo(this.state.map)
+  //     .setPopup(
+  //       new mapboxgl.Popup({ offset: 25 }).setHTML(
+  //         '<h3>' + 'Address 1' + '</h3><p>' + this.state.address1 + '</p'
+  //       )
+  //     );
+  //   await new mapboxgl.Marker()
+  //     .setLngLat([x2, y2])
+  //     .addTo(this.state.map)
+  //     .setPopup(
+  //       new mapboxgl.Popup({ offset: 25 }).setHTML(
+  //         '<h3>' + 'Address2' + '</h3><p>' + this.state.address2 + '</p'
+  //       )
+  //     );
+  //   this.state.map.fitBounds([
+  //     [westmost, southmost],
+  //     [eastmost, northmost],
+  //   ]);
+  // }
 
   async componentDidMount() {
     const key = await this.props.getKey();
