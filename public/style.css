@@ -57,3 +57,35 @@ form div {
 #address-form input {
   width: 25rem;
 }
+
+#middle-coords {
+  font-family: 'PT Sans';
+  text-align: center;
+  margin-top: 1rem;
+  color: #41504b;
+}
+
+.midpoint-results {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+#find-spot-button,
+#start-over-button {
+  background-color: #89b6a5;
+  color: #4c3b4d;
+  border-style: none;
+  font-family: 'PT Sans';
+  padding: 12px;
+  border: 1px solid #4c3b4d;
+  border-radius: 3px;
+}
+#find-spot-button:hover,
+#start-over-button:hover {
+  background-color: #82968c;
+}
+
+#start-over-button {
+  margin-top: 1rem;
+}

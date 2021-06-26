@@ -15,6 +15,7 @@ class MapBox extends React.PureComponent {
       zoom: 12,
       midLng: null,
       midLat: null,
+      map: null,
     };
     this.mapContainer = React.createRef();
     this.handleChange = this.handleChange.bind(this);
@@ -36,16 +37,20 @@ class MapBox extends React.PureComponent {
     this.findMiddle(this.props.coordinates);
   }
 
-  findMiddle(coordinates) {
+  async findMiddle(coordinates) {
     console.log('in find middle with coordinates: ', coordinates);
+    console.log('local state map: ', this.state.map);
     const x1 = coordinates[0][0];
     const x2 = coordinates[1][0];
     const y1 = coordinates[0][1];
     const y2 = coordinates[1][1];
     const midX = (x1 + x2) / 2;
     const midY = (y1 + y2) / 2;
-    console.log(`middle (${midX},${midY})`);
+    // console.log(`middle (${midX},${midY})`);
     this.setState({ ...this.state, midLng: midX, midLat: midY });
+    await new mapboxgl.Marker().setLngLat([midX, midY]).addTo(this.state.map);
+    await new mapboxgl.Marker().setLngLat([x1, y1]).addTo(this.state.map);
+    await new mapboxgl.Marker().setLngLat([x2, y2]).addTo(this.state.map);
   }
 
   async componentDidMount() {
@@ -76,6 +81,8 @@ class MapBox extends React.PureComponent {
     //   profile: 'mapbox/walking',
     // });
     // map.addControl(directions, 'top-left');
+
+    this.setState({ map: map });
   }
 
   render() {
@@ -90,23 +97,48 @@ class MapBox extends React.PureComponent {
               <label htmlFor="address-1">
                 <small>Address 1:</small>
               </label>
-              <input name="address1" type="text" onChange={handleChange} />
+              <input
+                name="address1"
+                type="text"
+                onChange={handleChange}
+                value={this.state.address1}
+              />
             </div>
             <div className="address-input">
               <label htmlFor="address-2">
                 <small>Address 2:</small>
               </label>
-              <input name="address2" type="text" onChange={handleChange} />
+              <input
+                name="address2"
+                type="text"
+                onChange={handleChange}
+                value={this.state.address2}
+              />
             </div>
           </div>
-          <button type="submit" onClick={handleSubmit}>
+          <button id="find-spot-button" type="submit" onClick={handleSubmit}>
             Find a Meeting Spot
           </button>
         </form>
         {this.state.midLng ? (
-          <div>
-            Your midway meeting spot is at: {this.state.midLng}˚,
-            {this.state.midLat}˚
+          <div className="midpoint-results">
+            <div id="middle-coords">
+              Your midway meeting spot is at: {this.state.midLng}˚,{' '}
+              {this.state.midLat}˚
+            </div>
+            <button
+              id="start-over-button"
+              onClick={() => {
+                this.setState({
+                  address1: '',
+                  address2: '',
+                  midLng: '',
+                  midLat: '',
+                });
+              }}
+            >
+              Start Over
+            </button>
           </div>
         ) : (
           <div></div>
