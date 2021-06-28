@@ -87,14 +87,16 @@ form div {
 }
 
 #middle-coords,
-.travel-time {
+.travel-time,
+.yelp-results {
   font-family: 'PT Sans';
   text-align: center;
   margin-top: 1rem;
   color: #41504b;
 }
 
-.travel-time-results {
+.travel-time-results,
+.yelp-results {
   display: flex;
   flex-direction: row;
 }
@@ -109,8 +111,21 @@ form div {
   flex-direction: column;
 }
 
+.yelp-results {
+  width: 50rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.restaurant {
+  margin: 1rem;
+  width: 15rem;
+}
+
 #find-spot-button,
-#start-over-button {
+#start-over-button,
+#find-food-button,
+#find-events {
   background-color: #89b6a5;
   color: #4c3b4d;
   border-style: none;
@@ -120,7 +135,14 @@ form div {
   border-radius: 3px;
   margin-top: 1rem;
 }
+
+#find-food-button {
+  margin-right: 1rem;
+}
+
 #find-spot-button:hover,
-#start-over-button:hover {
+#start-over-button:hover,
+#find-food-button:hover,
+#find-events:hover {
   background-color: #82968c;
 }

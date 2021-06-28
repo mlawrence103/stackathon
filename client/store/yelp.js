@@ -24,21 +24,6 @@ export const findFood = (long, lat) => {
       const keyRes = await axios.get('/api/yelpApiKey');
       const key = keyRes.data;
       console.log('found yelp api key in thunk: ', key);
-      // const results = await axios.get(
-      //   'https://api.yelp.com/v3/businesses/search',
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${key}`,
-      //     },
-      //     params: {
-      //       latitude: lat,
-      //       longitude: long,
-      //       categories: 'restaurants',
-      //       limit: 10,
-      //       radius: 402,
-      //     },
-      //   }
-      // );
       const results = await axios.get(
         `${'https://cors-anywhere.herokuapp.com/'}https://api.yelp.com/v3/businesses/search?latitude=${lat}&longitude=${long}&categories=restaurants&limit=10&radius=402`,
         {

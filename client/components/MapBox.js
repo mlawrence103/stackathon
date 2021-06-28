@@ -22,6 +22,7 @@ class MapBox extends React.PureComponent {
       map: null,
       markers: [],
       food: [],
+      events: [],
       directions: {
         directions1: {},
         directions2: {},
@@ -31,6 +32,7 @@ class MapBox extends React.PureComponent {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.findFood = this.findFood.bind(this);
+    this.findEvents = this.findEvents.bind(this);
   }
 
   handleChange(event) {
@@ -101,6 +103,16 @@ class MapBox extends React.PureComponent {
     );
     console.log('results from findFood in component: ', this.props.food);
     this.setState({ ...this.state, food: results.results });
+  }
+
+  async findEvents() {
+    console.log('HERE in find events function with state: ', this.state);
+    const results = await this.props.findEvents(
+      this.state.midLng,
+      this.state.midLat
+    );
+    console.log('results from findFood in component: ', this.props.events);
+    this.setState({ ...this.state, events: results.results });
   }
 
   async componentDidMount() {
@@ -273,7 +285,14 @@ class MapBox extends React.PureComponent {
               >
                 Find Food Near Meetup
               </button>
-              {/* <button id="find-events">Find Events Near Meetup</button> */}
+              <button
+                id="find-events"
+                onClick={() => {
+                  this.findEvents();
+                }}
+              >
+                Find Events Near Meetup
+              </button>
             </div>
             {this.state.food.length ? (
               <div className="yelp-results">
@@ -342,6 +361,7 @@ const mapDispatch = (dispatch) => {
     getDirections: (travelType, address1, address2, routeNum) =>
       dispatch(getDirections(travelType, address1, address2, routeNum)),
     findFood: (long, lat) => dispatch(findFood(long, lat)),
+    findEvents: (long, lat) => dispatch(findEvents(long, lat)),
   };
 };
 
