@@ -1,5 +1,6 @@
 import React from 'react';
-import { convertToCoords, getKey, getDirections } from '../store/map';
+import { convertToCoords, getMapKey, getDirections } from '../store/map';
+import { findFood, findEvents } from '../store/yelp';
 import { connect } from 'react-redux';
 import mapboxgl from '!mapbox-gl';
 import findMiddle from './findMiddle';
@@ -20,6 +21,7 @@ class MapBox extends React.PureComponent {
       midLat: null,
       map: null,
       markers: [],
+      food: [],
       directions: {
         directions1: {},
         directions2: {},
@@ -28,7 +30,7 @@ class MapBox extends React.PureComponent {
     this.mapContainer = React.createRef();
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    // this.setTravelType = this.setTravelType.bind(this);
+    this.findFood = this.findFood.bind(this);
   }
 
   handleChange(event) {
@@ -91,8 +93,18 @@ class MapBox extends React.PureComponent {
     });
   }
 
+  async findFood() {
+    console.log('HERE in find food function with state: ', this.state);
+    const results = await this.props.findFood(
+      this.state.midLng,
+      this.state.midLat
+    );
+    console.log('results from findFood in component: ', this.props.food);
+    this.setState({ ...this.state, food: results.results });
+  }
+
   async componentDidMount() {
-    const key = await this.props.getKey();
+    const key = await this.props.getMapKey();
     console.log('key: ', key.key);
     mapboxgl.accessToken = key.key;
     console.log('props in comp did mount: ', this.props);
@@ -125,6 +137,7 @@ class MapBox extends React.PureComponent {
 
   render() {
     const { handleChange, handleSubmit } = this;
+    console.log('in render with food: ', this.state.food);
     return (
       <div>
         <div ref={this.mapContainer} className="map-container" />
@@ -199,7 +212,6 @@ class MapBox extends React.PureComponent {
                       className="driving-travel"
                       name="travelType2"
                       value="Driving"
-                      // onClick={() => handleChange}
                     />
                     <label>Driving</label>
                   </div>
@@ -209,7 +221,6 @@ class MapBox extends React.PureComponent {
                       className="walking-travel"
                       name="travelType2"
                       value="Walking"
-                      // onClick={() => handleChange}
                     />
                     <label>Walking</label>
                   </div>
@@ -219,7 +230,6 @@ class MapBox extends React.PureComponent {
                       className="cycling-travel"
                       name="travelType2"
                       value="Cycling"
-                      // onClick={() => handleChange}
                     />
                     <label>Cycling</label>
                   </div>
@@ -254,6 +264,34 @@ class MapBox extends React.PureComponent {
             ) : (
               <div></div>
             )}
+            <div id="yelp-buttons">
+              <button
+                id="find-food-button"
+                onClick={() => {
+                  this.findFood();
+                }}
+              >
+                Find Food Near Meetup
+              </button>
+              {/* <button id="find-events">Find Events Near Meetup</button> */}
+            </div>
+            {this.state.food.length ? (
+              <div className="yelp-results">
+                {this.state.food.map((result) => (
+                  <div
+                    className="restaurant"
+                    key={Math.ceil(Math.random() * 100)}
+                  >
+                    <div className="restaurant-name">{result.name}</div>
+                    <div className="restaurant-address">
+                      {result.location.address1}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div></div>
+            )}
             <button
               id="start-over-button"
               onClick={() => {
@@ -266,6 +304,7 @@ class MapBox extends React.PureComponent {
                   zoom: 12,
                   midLng: null,
                   midLat: null,
+                  food: [],
                   directions: {
                     directions1: {},
                     directions2: {},
@@ -290,6 +329,8 @@ const mapState = (state) => {
     coordinates: state.map.coordinates,
     directions1: state.map.directions1,
     directions2: state.map.directions2,
+    food: state.yelp.food,
+    events: state.yelp.events,
   };
 };
 
@@ -297,9 +338,10 @@ const mapDispatch = (dispatch) => {
   return {
     convertToCoords: (address1, address2) =>
       dispatch(convertToCoords(address1, address2)),
-    getKey: () => dispatch(getKey()),
+    getMapKey: () => dispatch(getMapKey()),
     getDirections: (travelType, address1, address2, routeNum) =>
       dispatch(getDirections(travelType, address1, address2, routeNum)),
+    findFood: (long, lat) => dispatch(findFood(long, lat)),
   };
 };
 

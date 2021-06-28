@@ -4,7 +4,7 @@ const CONVERT_TO_COORDS = 'CONVERT_TO_COORDS';
 const GET_DIRECTIONS1 = 'GET_DIRECTIONS1';
 const GET_DIRECTIONS2 = 'GET_DIRECTIONS2';
 
-const gotKey = (key) => {
+const gotMapKey = (key) => {
   console.log('key from server in ACTION: ', key);
   return { type: GET_MAPBOX_API_KEY, key };
 };
@@ -30,11 +30,11 @@ const _getDirections2 = (directions) => {
   };
 };
 
-export const getKey = () => {
+export const getMapKey = () => {
   return async (dispatch) => {
     try {
-      const res = await axios.get('/api/apiKey');
-      return dispatch(gotKey(res.data));
+      const res = await axios.get('/api/mapApiKey');
+      return dispatch(gotMapKey(res.data));
     } catch (error) {
       console.log("couldn't get api key", error);
     }
@@ -48,7 +48,7 @@ export const convertToCoords = (address1, address2) => {
   console.log('encoded address: ', encodedAddress1, encodedAddress2);
   return async (dispatch) => {
     try {
-      const apiKeyRes = await axios.get('/api/apiKey');
+      const apiKeyRes = await axios.get('/api/mapApiKey');
       const apiKey = apiKeyRes.data;
       const res1 = await axios.get(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodedAddress1}.json?access_token=${apiKey}`
@@ -78,7 +78,7 @@ export const getDirections = (travelType, address1, address2, routeNum) => {
   console.log('inputs: ', travelType, address1, address2);
   return async (dispatch) => {
     try {
-      const apiKeyRes = await axios.get('/api/apiKey');
+      const apiKeyRes = await axios.get('/api/mapApiKey');
       const apiKey = apiKeyRes.data;
       const directionsRes = await axios.get(
         `https://api.mapbox.com/directions/v5/mapbox/${travelType.toLowerCase()}/${
