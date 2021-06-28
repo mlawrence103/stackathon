@@ -279,10 +279,7 @@ class MapBox extends React.PureComponent {
             {this.state.food.length ? (
               <div className="yelp-results">
                 {this.state.food.map((result) => (
-                  <div
-                    className="restaurant"
-                    key={Math.ceil(Math.random() * 100)}
-                  >
+                  <div className="restaurant" key={result.id}>
                     <div className="restaurant-name">{result.name}</div>
                     <div className="restaurant-address">
                       {result.location.address1}
@@ -296,10 +293,10 @@ class MapBox extends React.PureComponent {
             {this.state.events.length ? (
               <div className="yelp-results">
                 {this.state.events.map((result) => (
-                  <div className="event" key={Math.ceil(Math.random() * 100)}>
+                  <div className="event" key={result.id}>
                     <div className="event-name">{result.name}</div>
                     <div className="event-category">
-                      {result.categories[0].title}
+                      Category: {result.categories[0].title}
                     </div>
                     <div className="event-address">
                       {result.location.address1}

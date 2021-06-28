@@ -123,6 +123,12 @@ form div {
   width: 15rem;
 }
 
+.event-category {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
 #find-spot-button,
 #start-over-button,
 #find-food-button,
