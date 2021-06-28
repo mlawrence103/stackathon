@@ -41,6 +41,11 @@ export default async function findMiddle(
   const midX = x1 + k * (x2 - x1);
   const midY = y1 + k * (y2 - y1);
 
+  const midPixel = map.project([midX, midY]);
+  console.log('mid pixel: ', midPixel, typeof midPixel);
+  const features = map.queryRenderedFeatures(midPixel.s);
+  console.log('features on midpoint: ', features);
+
   const westmost = Math.min(x1, x2) - 0.005;
   const eastmost = Math.max(x1, x2) + 0.005;
   const southmost = Math.min(y1, y2) - 0.005;

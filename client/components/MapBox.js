@@ -6,6 +6,8 @@ import mapboxgl from '!mapbox-gl';
 import findMiddle from './findMiddle';
 import MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions';
 
+//all coordinates are in form longitude, latitude, but they are rendered (lat,long)
+
 class MapBox extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -238,8 +240,8 @@ class MapBox extends React.PureComponent {
         {this.state.midLng ? (
           <div className="midpoint-results">
             <div id="middle-coords">
-              Your midway meeting spot is at: {this.state.midLng}˚,{' '}
-              {this.state.midLat}˚
+              Your midway meeting spot is at: {this.state.midLat}˚,{' '}
+              {this.state.midLng}˚
             </div>
             {this.state.directions.directions1.duration &&
             this.state.directions.directions2.duration ? (
