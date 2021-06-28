@@ -97,22 +97,26 @@ class MapBox extends React.PureComponent {
 
   async findFood() {
     console.log('HERE in find food function with state: ', this.state);
-    const results = await this.props.findFood(
-      this.state.midLng,
-      this.state.midLat
-    );
-    console.log('results from findFood in component: ', this.props.food);
-    this.setState({ ...this.state, food: results.results });
+    if (!this.state.food.length) {
+      const results = await this.props.findFood(
+        this.state.midLng,
+        this.state.midLat
+      );
+      console.log('results from findFood in component: ', this.props.food);
+      this.setState({ ...this.state, food: results.results });
+    }
   }
 
   async findEvents() {
     console.log('HERE in find events function with state: ', this.state);
-    const results = await this.props.findEvents(
-      this.state.midLng,
-      this.state.midLat
-    );
-    console.log('results from findFood in component: ', this.props.events);
-    this.setState({ ...this.state, events: results.results });
+    if (!this.state.events.length) {
+      const results = await this.props.findEvents(
+        this.state.midLng,
+        this.state.midLat
+      );
+      console.log('results from findEvents in component: ', this.props.events);
+      this.setState({ ...this.state, events: results.results });
+    }
   }
 
   async componentDidMount() {
@@ -149,7 +153,6 @@ class MapBox extends React.PureComponent {
 
   render() {
     const { handleChange, handleSubmit } = this;
-    console.log('in render with food: ', this.state.food);
     return (
       <div>
         <div ref={this.mapContainer} className="map-container" />
@@ -311,6 +314,23 @@ class MapBox extends React.PureComponent {
             ) : (
               <div></div>
             )}
+            {this.state.events.length ? (
+              <div className="yelp-results">
+                {this.state.events.map((result) => (
+                  <div className="event" key={Math.ceil(Math.random() * 100)}>
+                    <div className="event-name">{result.name}</div>
+                    <div className="event-category">
+                      {result.categories[0].title}
+                    </div>
+                    <div className="event-address">
+                      {result.location.address1}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div></div>
+            )}
             <button
               id="start-over-button"
               onClick={() => {
@@ -324,6 +344,7 @@ class MapBox extends React.PureComponent {
                   midLng: null,
                   midLat: null,
                   food: [],
+                  events: [],
                   directions: {
                     directions1: {},
                     directions2: {},

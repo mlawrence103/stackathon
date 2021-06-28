@@ -46,7 +46,7 @@ export const findEvents = (long, lat) => {
       const keyRes = await axios.get('/api/yelpApiKey');
       const key = keyRes.data;
       const results = await axios.get(
-        `${'https://cors-anywhere.herokuapp.com/'}https://api.yelp.com/v3/events/search?latitude=${lat}&longitude=${long}&categories=sightseeing,culture,arts&sort_by=rating&radius=800`,
+        `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?latitude=${lat}&longitude=${long}&categories=sightseeing,culture,arts&limit=10&sort_by=rating&radius=800`,
         {
           headers: {
             Authorization: `Bearer ${key}`,
