@@ -5,7 +5,6 @@ const GET_DIRECTIONS1 = 'GET_DIRECTIONS1';
 const GET_DIRECTIONS2 = 'GET_DIRECTIONS2';
 
 const gotMapKey = (key) => {
-  console.log('key from server in ACTION: ', key);
   return { type: GET_MAPBOX_API_KEY, key };
 };
 
@@ -42,10 +41,8 @@ export const getMapKey = () => {
 };
 
 export const convertToCoords = (address1, address2) => {
-  console.log('in convert thunk with addresses: ', address1, address2);
   const encodedAddress1 = encodeURI(address1);
   const encodedAddress2 = encodeURI(address2);
-  console.log('encoded address: ', encodedAddress1, encodedAddress2);
   return async (dispatch) => {
     try {
       const apiKeyRes = await axios.get('/api/mapApiKey');
@@ -58,12 +55,6 @@ export const convertToCoords = (address1, address2) => {
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodedAddress2}.json?access_token=${apiKey}`
       );
       const convertedAddress2 = res2.data.features[0].center;
-      console.log(
-        'response from geocoder: ',
-        res1.data.features,
-        res2.data.features
-      );
-      console.log('converted address: ', convertedAddress1, convertedAddress2);
       return dispatch(_convertToCoords([convertedAddress1, convertedAddress2]));
     } catch (error) {
       console.log('error converting to coodinates', error);
@@ -74,8 +65,6 @@ export const convertToCoords = (address1, address2) => {
 //addresses should be passed in as coordinates
 //route num determines which part of state should be set
 export const getDirections = (travelType, address1, address2, routeNum) => {
-  console.log('HERE in get directions thunk');
-  console.log('inputs: ', travelType, address1, address2);
   return async (dispatch) => {
     try {
       const apiKeyRes = await axios.get('/api/mapApiKey');
@@ -86,7 +75,6 @@ export const getDirections = (travelType, address1, address2, routeNum) => {
         },${address1[1]};${address2[0]},${address2[1]}?access_token=${apiKey}`
       );
       const directions = directionsRes.data;
-      console.log('response from directions api: ', directions);
       if (routeNum === 1) {
         return dispatch(_getDirections1(directions));
       } else {

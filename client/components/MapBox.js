@@ -36,15 +36,12 @@ class MapBox extends React.PureComponent {
   }
 
   handleChange(event) {
-    console.log(`handle change: ${event.target.name}: ${event.target.value}`);
-    // event.preventDefault();
     this.setState({
       [event.target.name]: event.target.value,
     });
   }
 
   async handleSubmit(event) {
-    console.log('state in handle submit: ', this.state);
     event.preventDefault();
     await this.props.convertToCoords(this.state.address1, this.state.address2);
     const [midX, midY, marker1, marker2, midMarker] = await findMiddle(
@@ -62,10 +59,6 @@ class MapBox extends React.PureComponent {
       midLat: midY,
       markers: [marker1, marker2, midMarker],
     });
-    console.log(
-      'travel type 1 being sent from handle submit: ',
-      this.state.travelType1
-    );
     await this.props.getDirections(
       this.state.travelType1,
       this.props.coordinates[0],
@@ -78,14 +71,6 @@ class MapBox extends React.PureComponent {
       [midX, midY],
       2
     );
-    console.log(
-      'Directions from address 1 to midpoint is: ',
-      this.props.directions1.routes[0]
-    );
-    console.log(
-      'Directions from address 2 to midpoint is: ',
-      this.props.directions2.routes[0]
-    );
     this.setState({
       ...this.state,
       directions: {
@@ -96,34 +81,28 @@ class MapBox extends React.PureComponent {
   }
 
   async findFood() {
-    console.log('HERE in find food function with state: ', this.state);
     if (!this.state.food.length) {
       const results = await this.props.findFood(
         this.state.midLng,
         this.state.midLat
       );
-      console.log('results from findFood in component: ', this.props.food);
       this.setState({ ...this.state, food: results.results });
     }
   }
 
   async findEvents() {
-    console.log('HERE in find events function with state: ', this.state);
     if (!this.state.events.length) {
       const results = await this.props.findEvents(
         this.state.midLng,
         this.state.midLat
       );
-      console.log('results from findEvents in component: ', this.props.events);
       this.setState({ ...this.state, events: results.results });
     }
   }
 
   async componentDidMount() {
     const key = await this.props.getMapKey();
-    console.log('key: ', key.key);
     mapboxgl.accessToken = key.key;
-    console.log('props in comp did mount: ', this.props);
     const { lng, lat, zoom } = this.state;
 
     const map = await new mapboxgl.Map({

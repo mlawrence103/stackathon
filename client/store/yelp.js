@@ -20,7 +20,6 @@ const _findEvents = (results) => {
 export const findFood = (long, lat) => {
   return async (dispatch) => {
     try {
-      console.log('IN FIND FOOD with coords: ', lat, long);
       const keyRes = await axios.get('/api/yelpApiKey');
       const key = keyRes.data;
       const results = await axios.get(
@@ -31,7 +30,6 @@ export const findFood = (long, lat) => {
           },
         }
       );
-      console.log('results from find food thunk: ', results.data.businesses);
       return dispatch(_findFood(results.data.businesses));
     } catch (error) {
       console.log("Couldn't find lunch spots", error);
@@ -42,7 +40,6 @@ export const findFood = (long, lat) => {
 export const findEvents = (long, lat) => {
   return async (dispatch) => {
     try {
-      console.log('IN FIND EVENTS thunk with coords: ', lat, long);
       const keyRes = await axios.get('/api/yelpApiKey');
       const key = keyRes.data;
       const results = await axios.get(
@@ -53,7 +50,6 @@ export const findEvents = (long, lat) => {
           },
         }
       );
-      console.log('results from find food thunk: ', results.data.businesses);
       return dispatch(_findEvents(results.data.businesses));
     } catch (error) {
       console.log("Couldn't find lunch spots", error);

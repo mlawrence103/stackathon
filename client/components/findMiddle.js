@@ -9,9 +9,6 @@ export default async function findMiddle(
   travelType2,
   markers
 ) {
-  console.log('in find middle with markers: ', markers);
-  // console.log('local state map: ', map);
-
   //rename coordinates for something more usable
   const x1 = coordinates[0][0];
   const x2 = coordinates[1][0];
