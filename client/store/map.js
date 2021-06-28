@@ -1,7 +1,8 @@
 import axios from 'axios';
 const GET_MAPBOX_API_KEY = 'GET_GOOGLE_API_KEY';
 const CONVERT_TO_COORDS = 'CONVERT_TO_COORDS';
-const GET_DIRECTIONS = 'GET_DIRECTIONS';
+const GET_DIRECTIONS1 = 'GET_DIRECTIONS1';
+const GET_DIRECTIONS2 = 'GET_DIRECTIONS2';
 
 const gotKey = (key) => {
   console.log('key from server in ACTION: ', key);
@@ -15,9 +16,16 @@ const _convertToCoords = (coordinates) => {
   };
 };
 
-const _getDirections = (directions) => {
+const _getDirections1 = (directions) => {
   return {
-    type: GET_DIRECTIONS,
+    type: GET_DIRECTIONS1,
+    directions,
+  };
+};
+
+const _getDirections2 = (directions) => {
+  return {
+    type: GET_DIRECTIONS2,
     directions,
   };
 };
@@ -64,7 +72,8 @@ export const convertToCoords = (address1, address2) => {
 };
 
 //addresses should be passed in as coordinates
-export const getDirections = (travelType, address1, address2) => {
+//route num determines which part of state should be set
+export const getDirections = (travelType, address1, address2, routeNum) => {
   console.log('HERE in get directions thunk');
   console.log('inputs: ', travelType, address1, address2);
   return async (dispatch) => {
@@ -78,7 +87,11 @@ export const getDirections = (travelType, address1, address2) => {
       );
       const directions = directionsRes.data;
       console.log('response from directions api: ', directions);
-      return dispatch(_getDirections(directions));
+      if (routeNum === 1) {
+        return dispatch(_getDirections1(directions));
+      } else {
+        return dispatch(_getDirections2(directions));
+      }
     } catch (error) {
       console.log("Couldn't get directions", error);
     }
@@ -94,8 +107,10 @@ export default function (
       return { ...state, key: action.key };
     case CONVERT_TO_COORDS:
       return { ...state, coordinates: action.coordinates };
-    case GET_DIRECTIONS:
-      return { ...state, directions: action.directions };
+    case GET_DIRECTIONS1:
+      return { ...state, directions1: action.directions };
+    case GET_DIRECTIONS2:
+      return { ...state, directions2: action.directions };
     default:
       return state;
   }

@@ -86,11 +86,21 @@ form div {
   margin-top: none;
 }
 
-#middle-coords {
+#middle-coords,
+.travel-time {
   font-family: 'PT Sans';
   text-align: center;
   margin-top: 1rem;
   color: #41504b;
+}
+
+.travel-time-results {
+  display: flex;
+  flex-direction: row;
+}
+
+.travel-time {
+  width: 25rem;
 }
 
 .midpoint-results {

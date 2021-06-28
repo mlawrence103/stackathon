@@ -19,17 +19,21 @@ class MapBox extends React.PureComponent {
       midLng: null,
       midLat: null,
       map: null,
-      directions1: {
-        duration: null,
+      markers: [],
+      directions: {
+        directions1: {},
+        directions2: {},
       },
     };
     this.mapContainer = React.createRef();
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    // this.setTravelType = this.setTravelType.bind(this);
   }
 
   handleChange(event) {
-    event.preventDefault();
+    console.log(`handle change: ${event.target.name}: ${event.target.value}`);
+    // event.preventDefault();
     this.setState({
       [event.target.name]: event.target.value,
     });
@@ -39,13 +43,21 @@ class MapBox extends React.PureComponent {
     console.log('state in handle submit: ', this.state);
     event.preventDefault();
     await this.props.convertToCoords(this.state.address1, this.state.address2);
-    const [midX, midY] = await findMiddle(
+    const [midX, midY, marker1, marker2, midMarker] = await findMiddle(
       this.props.coordinates,
       this.state.map,
       this.state.address1,
-      this.state.address2
+      this.state.address2,
+      this.state.travelType1.toLowerCase(),
+      this.state.travelType2.toLowerCase(),
+      this.state.markers
     );
-    this.setState({ ...this.state, midLng: midX, midLat: midY });
+    this.setState({
+      ...this.state,
+      midLng: midX,
+      midLat: midY,
+      markers: [marker1, marker2, midMarker],
+    });
     console.log(
       'travel type 1 being sent from handle submit: ',
       this.state.travelType1
@@ -53,16 +65,29 @@ class MapBox extends React.PureComponent {
     await this.props.getDirections(
       this.state.travelType1,
       this.props.coordinates[0],
-      [midX, midY]
+      [midX, midY],
+      1
+    );
+    await this.props.getDirections(
+      this.state.travelType2,
+      this.props.coordinates[1],
+      [midX, midY],
+      2
     );
     console.log(
-      'Travel time from address 1 to midpoint is: ',
-      this.props.directions.routes[0].duration / 60,
-      ' minutes'
+      'Directions from address 1 to midpoint is: ',
+      this.props.directions1.routes[0]
+    );
+    console.log(
+      'Directions from address 2 to midpoint is: ',
+      this.props.directions2.routes[0]
     );
     this.setState({
       ...this.state,
-      directions1: { duration: this.props.directions.routes[0].duration / 60 },
+      directions: {
+        directions1: this.props.directions1.routes[0],
+        directions2: this.props.directions2.routes[0],
+      },
     });
   }
 
@@ -99,7 +124,6 @@ class MapBox extends React.PureComponent {
   }
 
   render() {
-    console.log('in render');
     const { handleChange, handleSubmit } = this;
     return (
       <div>
@@ -120,17 +144,14 @@ class MapBox extends React.PureComponent {
               </div>
               <div className="travel-form-wrapper">
                 <small>Travel Type: </small>
-                <div className="travel-form">
+                <div className="travel-form" onChange={handleChange}>
                   <div className="travel-type">
                     <input
                       type="radio"
                       className="driving-travel"
                       name="travelType1"
                       value="Driving"
-                      onClick={this.setState({
-                        ...this.state,
-                        travelType1: 'Driving',
-                      })}
+                      selected={this.state.travelType1 === 'Driving'}
                     />
                     <label>Driving</label>
                   </div>
@@ -140,10 +161,7 @@ class MapBox extends React.PureComponent {
                       className="walking-travel"
                       name="travelType1"
                       value="Walking"
-                      onClick={this.setState({
-                        ...this.state,
-                        travelType1: 'Walking',
-                      })}
+                      selected={this.state.travelType1 === 'Walking'}
                     />
                     <label>Walking</label>
                   </div>
@@ -153,10 +171,7 @@ class MapBox extends React.PureComponent {
                       className="cycling-travel"
                       name="travelType1"
                       value="Cycling"
-                      onClick={this.setState({
-                        ...this.state,
-                        travelType1: 'Cycling',
-                      })}
+                      selected={this.state.travelType1 === 'Cycling'}
                     />
                     <label>Cycling</label>
                   </div>
@@ -177,17 +192,14 @@ class MapBox extends React.PureComponent {
               </div>
               <div className="travel-form-wrapper">
                 <small>Travel Type: </small>
-                <div className="travel-form">
+                <div className="travel-form" onChange={handleChange}>
                   <div className="travel-type">
                     <input
                       type="radio"
                       className="driving-travel"
                       name="travelType2"
                       value="Driving"
-                      onClick={this.setState({
-                        ...this.state,
-                        travelType2: 'Driving',
-                      })}
+                      // onClick={() => handleChange}
                     />
                     <label>Driving</label>
                   </div>
@@ -197,10 +209,7 @@ class MapBox extends React.PureComponent {
                       className="walking-travel"
                       name="travelType2"
                       value="Walking"
-                      onClick={this.setState({
-                        ...this.state,
-                        travelType2: 'Walking',
-                      })}
+                      // onClick={() => handleChange}
                     />
                     <label>Walking</label>
                   </div>
@@ -210,10 +219,7 @@ class MapBox extends React.PureComponent {
                       className="cycling-travel"
                       name="travelType2"
                       value="Cycling"
-                      onClick={this.setState({
-                        ...this.state,
-                        travelType2: 'Cycling',
-                      })}
+                      // onClick={() => handleChange}
                     />
                     <label>Cycling</label>
                   </div>
@@ -231,9 +237,27 @@ class MapBox extends React.PureComponent {
               Your midway meeting spot is at: {this.state.midLng}˚,{' '}
               {this.state.midLat}˚
             </div>
+            {this.state.directions.directions1.duration &&
+            this.state.directions.directions2.duration ? (
+              <div className="travel-time-results">
+                <div className="travel-time">
+                  Travel time from address 1 to meeting point is approximately{' '}
+                  {Math.ceil(this.state.directions.directions1.duration / 60)}{' '}
+                  minutes.
+                </div>
+                <div className="travel-time">
+                  Travel time from address 2 to meeting point is approximately{' '}
+                  {Math.ceil(this.state.directions.directions2.duration / 60)}{' '}
+                  minutes
+                </div>
+              </div>
+            ) : (
+              <div></div>
+            )}
             <button
               id="start-over-button"
               onClick={() => {
+                this.state.markers.forEach((marker) => marker.remove());
                 this.setState({
                   address1: '',
                   address2: '',
@@ -242,23 +266,15 @@ class MapBox extends React.PureComponent {
                   zoom: 12,
                   midLng: null,
                   midLat: null,
-                  map: null,
-                  directions1: {
-                    duration: null,
+                  directions: {
+                    directions1: {},
+                    directions2: {},
                   },
                 });
               }}
             >
               Start Over
             </button>
-          </div>
-        ) : (
-          <div></div>
-        )}
-        {this.state.directions1.duration ? (
-          <div>
-            Travel time from address 1 to meeting point is approximately{' '}
-            {this.state.directions1.duration} minutes
           </div>
         ) : (
           <div></div>
@@ -272,7 +288,8 @@ const mapState = (state) => {
   return {
     key: state.map.key,
     coordinates: state.map.coordinates,
-    directions: state.map.directions,
+    directions1: state.map.directions1,
+    directions2: state.map.directions2,
   };
 };
 
@@ -281,8 +298,8 @@ const mapDispatch = (dispatch) => {
     convertToCoords: (address1, address2) =>
       dispatch(convertToCoords(address1, address2)),
     getKey: () => dispatch(getKey()),
-    getDirections: (travelType, address1, address2) =>
-      dispatch(getDirections(travelType, address1, address2)),
+    getDirections: (travelType, address1, address2, routeNum) =>
+      dispatch(getDirections(travelType, address1, address2, routeNum)),
   };
 };
 
